@@ -373,7 +373,7 @@ void SingleApplicationPrivate::readInitMessageBody( QLocalSocket *sock )
         ( connectionType == SecondaryInstance &&
           options & SingleApplication::Mode::SecondaryNotification ) )
     {
-        Q_EMIT q->instanceStarted();
+        Q_EMIT q->instanceStarted(instanceId);
     }
 
     if (sock->bytesAvailable() > 0) {

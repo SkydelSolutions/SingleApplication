@@ -124,7 +124,7 @@ public:
     bool sendMessageToSecondary(quint32 instanceId, QByteArray message, int timeout = 100);
 
 Q_SIGNALS:
-    void instanceStarted();
+    void instanceStarted(quint32 instanceId);
     void receivedMessageFromSecondary( quint32 instanceId, QByteArray message );
     void receivedMessageFromPrimary(QByteArray message);
 
