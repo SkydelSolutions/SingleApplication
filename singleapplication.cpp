@@ -157,7 +157,7 @@ qint64 SingleApplication::primaryPid()
     return d->primaryPid();
 }
 
-bool SingleApplication::sendMessage( QByteArray message, int timeout )
+bool SingleApplication::sendMessageToPrimary( QByteArray message, int timeout )
 {
     Q_D(SingleApplication);
 
@@ -171,4 +171,30 @@ bool SingleApplication::sendMessage( QByteArray message, int timeout )
     bool dataWritten = d->socket->flush();
     d->socket->waitForBytesWritten( timeout );
     return dataWritten;
+}
+
+QLocalSocket* findInstanceSocket(SingleApplicationPrivate* d, quint32 instanceId)
+{
+  for (auto it = d->connectionMap.begin(), end = d->connectionMap.end(); it != end; ++it)
+  {
+    if (it.value().instanceId == instanceId)
+      return it.key();
+  }
+  return nullptr;
+}
+
+bool SingleApplication::sendMessageToSecondary(quint32 instanceId, QByteArray message, int timeout)
+{
+  if (isSecondary()) return false;
+
+  Q_D(SingleApplication);
+
+  QLocalSocket* socket = findInstanceSocket(d, instanceId);
+
+  if (!socket) return false;
+
+  socket->write(message);
+  bool dataWritten = socket->flush();
+  socket->waitForBytesWritten(timeout);
+  return dataWritten;
 }

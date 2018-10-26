@@ -185,6 +185,11 @@ void SingleApplicationPrivate::connectToPrimary( int msecs, ConnectionType conne
     // connected.
     if( socket == nullptr ) {
         socket = new QLocalSocket();
+        connect(socket, &QLocalSocket::readyRead, this, [this]()
+        {
+          Q_Q(SingleApplication);
+          Q_EMIT q->receivedMessageFromPrimary(socket->readAll());
+        });
     }
 
     // If already connected - we are done;
@@ -379,7 +384,7 @@ void SingleApplicationPrivate::readInitMessageBody( QLocalSocket *sock )
 void SingleApplicationPrivate::slotDataAvailable( QLocalSocket *dataSocket, quint32 instanceId )
 {
     Q_Q(SingleApplication);
-    Q_EMIT q->receivedMessage( instanceId, dataSocket->readAll() );
+    Q_EMIT q->receivedMessageFromSecondary( instanceId, dataSocket->readAll() );
 }
 
 void SingleApplicationPrivate::slotClientConnectionClosed( QLocalSocket *closedSocket, quint32 instanceId )

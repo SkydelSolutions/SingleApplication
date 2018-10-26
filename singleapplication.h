@@ -119,11 +119,14 @@ public:
      * @note sendMessage() will return false if invoked from the primary
      * instance.
      */
-    bool sendMessage( QByteArray message, int timeout = 100 );
+    bool sendMessageToPrimary( QByteArray message, int timeout = 100 );
+
+    bool sendMessageToSecondary(quint32 instanceId, QByteArray message, int timeout = 100);
 
 Q_SIGNALS:
     void instanceStarted();
-    void receivedMessage( quint32 instanceId, QByteArray message );
+    void receivedMessageFromSecondary( quint32 instanceId, QByteArray message );
+    void receivedMessageFromPrimary(QByteArray message);
 
 private:
     SingleApplicationPrivate *d_ptr;
