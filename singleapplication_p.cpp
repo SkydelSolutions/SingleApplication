@@ -142,7 +142,10 @@ void SingleApplicationPrivate::initializeMemoryBlock()
 
 void SingleApplicationPrivate::startPrimary()
 {
+#pragma warning(push)
+#pragma warning(disable: 4189) // False positive
     Q_Q(SingleApplication);
+#pragma warning(pop)
 
     // Successful creation means that no main process exists
     // So we start a QLocalServer to listen for connections
