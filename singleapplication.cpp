@@ -190,8 +190,7 @@ bool SingleApplication::sendMessageToSecondary(quint32 instanceId, QByteArray me
   Q_D(SingleApplication);
 
   QLocalSocket* socket = findInstanceSocket(d, instanceId);
-
-  if (!socket) return false;
+  if (!socket || !socket->isValid()) return false;
 
   socket->write(message);
   bool dataWritten = socket->flush();
